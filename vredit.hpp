@@ -3,11 +3,9 @@
 
 class vredit{
 		private:
-	bool czypisac;
 	bool debug;
 	bool doclear;
 	bool editor;
-	bool err;
 	bool menu;
 	bool zmodyfikowano;
 	bool colormode;
@@ -58,8 +56,6 @@ class vredit{
 		drawtitle=false;
 		zmodyfikowano=false;
 		exit=false;
-		czypisac=false;
-		err=true;
 		pozycja=px=py=y=charsinline=vscroll=lscroll=lines=0;
 		margintop=2;
 		marginbot=1;
@@ -98,10 +94,20 @@ class vredit{
 	}
 	void menubold(std::string tekst, short &it,short &yshift){
 		if(pozycja==it) attron(A_BOLD|A_UNDERLINE);
-		mvprintw(wy/2+yshift,wx/2-tekst.size()/2,tekst.c_str());
+		mvprintw(wy/2+yshift,marginlr+ex/2-tekst.size()/2,tekst.c_str());
+		mvprintw(wy/2+yshift,marginlr*3+ex+ex/2-tekst.size()/2,tekst.c_str());
 		if(pozycja==it) attroff(A_BOLD|A_UNDERLINE);
 		it++;
 		yshift++;
+	}
+	void menutog(){
+		if(menu){
+			menu=false;
+			editor=true;
+		}else{
+			menu=true;
+			editor=false;
+		}
 	}
 	void lscrollNow(){
 		lscroll=0;
@@ -192,7 +198,7 @@ class vredit{
 		if(isreadable(path) && iswritable(path)) return true;
 		return false;
 	}
-	bool zapisz(){
+	bool wpisz(){
 		if(iswritable(nazwa)){
 			std::wfstream plik;
 			plik.open(nazwa,std::ios::out);
@@ -201,12 +207,60 @@ class vredit{
 			plik.close();
 			return true;
 		}else{
-			addstr(l("nie_mozna_pisac_do_pliku").c_str());
+			mvaddstr(0,0,l("nie_mozna_pisac_do_pliku").c_str());
 			printw(" %s",nazwa.c_str());
 			clicktocontinue();
 			return false;
 		}
 		return false;
+	}
+	bool zapisywanie(bool forceoverwrite=false){
+		bool err;
+		bool czypisac;
+		do{
+			err=true;
+			czypisac=false;
+			clear();
+			if(nazwa.empty()){
+				forceoverwrite=false;
+				mvaddstr(wy/2,1,l("sciezka_do_pliku").c_str());
+				addstr(": ");
+				char bb[CHARBUF];
+				getch();
+				textm();
+
+				while(getnstr(bb,CHARBUF)==ERR){
+					mvaddstr(wy/2,wx/2-10,l("uwaga_przekroczono_bufor_").c_str());
+					if(taknie())break;
+				}
+				nazwa.clear();
+				nazwa=bb;
+			}
+			flowm();
+			if(nazwa.empty()){
+				mvaddstr(wy/2,wx/2-10,l("jednak_nie_chcesz_zapisywac").c_str());
+				if(taknie()){
+					return false;
+				}else{
+					continue;
+				}
+			}
+
+			mvprintw(0,0,nazwa.c_str());
+
+			if(!forceoverwrite && isreadable(nazwa)){
+				clear();
+				mvaddstr(wy/2,wx/2-10,l("juz_istnieje_nadpisac").c_str());
+				if(taknie()){
+					czypisac=true;
+					err=false;
+				}else nazwa.clear();
+			}else czypisac=true;
+
+			if(czypisac && wpisz()) {err=false;} else {err=true;nazwa.clear();}
+		}while(err);
+
+		return true;
 	}
 	bool xyCheck(size_t xx=std::string::npos, size_t yy=std::string::npos){
 		if(xx==std::string::npos && yy==std::string::npos){
@@ -350,7 +404,7 @@ class vredit{
 
 			switch(znak){
 				case 0:{	//np ctrl+space
-					menu=true;
+					menutog();
 					pozycja=0;
 				}break;
 				case 9:{	//tab
@@ -482,82 +536,51 @@ class vredit{
 				{
 					if(pozycja+1<=4) pozycja++; else pozycja=0;
 				}break;
+
+				case 0:{ //np ctrl+spacja
+					menutog();
+					doclear=true;
+				}
 			}
+
 
 			if(znak=='\n'){
 				doclear=true;
 				switch(pozycja){
-					case 0:{		//Nowy
+					case 0:{		//Utwórz nowy
 						if(zmodyfikowano){
 							clear();
-
 							mvaddstr(wy/2,wx/2-10,l("czy_zapisac_poprzedni").c_str());
 							if(taknie(true)){
-								do{
-									err=true;
-									czypisac=false;
-									clear();
-									mvaddstr(wy/2,1,l("sciezka_do_pliku").c_str());
-									addstr(": ");
-									char bb[CHARBUF];
-									getch();
-									textm();
-									while(getnstr(bb,CHARBUF)==ERR){
-										mvaddstr(wy/2,wx/2-10,l("uwaga_przekroczono_bufor_").c_str());
-										if(taknie())break;
-									}
-									flowm();
-									nazwa.clear();
-									nazwa=bb;
-									if(nazwa.empty()){
-										mvaddstr(wy/2,wx/2-10,l("jednak_nie_chcesz_zapisywac").c_str());
-										if(taknie()){
-											break;
-										}else{
-											continue;
-										}
-									}
-
-									mvprintw(0,0,nazwa.c_str());
-
-									if(isreadable(nazwa)){
-										clear();
-										mvaddstr(wy/2,wx/2-10,l("juz_istnieje_nadpisac").c_str());
-										if(taknie()){
-											czypisac=true;
-											err=false;
-										}
-									}else czypisac=true;
-
-									if(czypisac && zapisz()) err=false; else err=true;
-
-								}while(err);
+								zapisywanie();
 							}
 						}
-						//plik1.close();
-						if(true){
-							editor=true;
-							menu=false;
-							zmodyfikowano=false;
-							bufor.clear();
-							px=0;
-							py=0;
-							lines=0;
-						}else{
-							mvaddstr(wy-1,0,l("nie_mozna_utworzyc").c_str()); refresh();
-							std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-						}
+						menutog();
+						zmodyfikowano=false;
+						bufor.clear();
+						nazwa.clear();
+						px=0;
+						py=0;
+						lines=0;
 					}break;
 					case 1:{		//Zapisz
+						if(zapisywanie(true)) zmodyfikowano=false;
+						menutog();
+					}break;
+					case 2:{		//Otwórz
 
 					}break;
-					case 2:{
+					case 3:{		//Pomoc
 
 					}break;
-					case 3:{
-
-					}break;
-					case 4:{
+					case 4:{		//Wyjście
+						if(zmodyfikowano){
+							clear();
+							mvaddstr(wy/2,wx/2-10,l("czy_chcesz_zapisac").c_str());
+							if(taknie(true)){
+								zapisywanie();
+							}
+						}
 						exit=true;
 					}break;
 				}
@@ -566,6 +589,7 @@ class vredit{
 			znakClear();
 
 			mvprintw(0,0,"v%s%s",AutoVersion::FULLVERSION_STRING,AutoVersion::STATUS_SHORT);
+			mvprintw(wy-1,0,l("ctrl_plus_spacja_").c_str());
 			short it=0,ss=-3;
 			menubold(l("utworz"),it,ss);
 			menubold(l("zapisz"),it,ss);

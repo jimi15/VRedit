@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1424808399 source:/home/jakub/jimi15/Programowanie/ncurses/VRedit/vredit.cpp
+1424897603 source:/home/jakub/jimi15/Programowanie/ncurses/VRedit/vredit.cpp
 	<ncursesw/ncurses.h>
 	<boost/algorithm/string.hpp>
 	<boost/locale.hpp>
@@ -27,7 +27,7 @@
 
 1424722798 /home/jakub/jimi15/Programowanie/ncurses/VRedit/utf8.hpp
 
-1424808970 /home/jakub/jimi15/Programowanie/ncurses/VRedit/vredit.hpp
+1424901647 /home/jakub/jimi15/Programowanie/ncurses/VRedit/vredit.hpp
 
 1424808467 /home/jakub/jimi15/Programowanie/ncurses/VRedit/version.hpp
 

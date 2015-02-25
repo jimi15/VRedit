@@ -12,7 +12,7 @@
 	-history managment
 	-write assistant
 	-multitab support
-	-simple C++ syntax highligtingdddddd
+	-simple C++ syntax highligting
 */
 	//ładowanie bibliotek
 
