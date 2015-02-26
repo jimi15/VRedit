@@ -8,25 +8,25 @@ static std::string l(const std::string &input,const int option=0){
 
 	if(lang.empty()){
 			#if defined LANG_PL
-				lang="polski";
+				lang="pl";
 			#elif defined LANG_EN
-				lang="angielski";
+				lang="en";
 			#elif defined LANG_ES
-				lang="hiszpanski";
+				lang="es";
 			#endif
 	}
 
 	switch(option){
 		case 0:{	//Wypisywanie z bazy
-			if(lang=="polski"){
+			if(lang=="pl"){
 				#if defined LANG_PL
 				output=lang_pl().get(input);
 				#endif
-			}else if(lang=="angielski"){
+			}else if(lang=="en"){
 				#if defined LANG_EN
 				output=lang_en().get(input);
 				#endif
-			}else if(lang=="hiszpanski"){
+			}else if(lang=="es"){
 				#if defined LANG_ES
 				output=lang_es().get(input);
 				#endif
@@ -36,24 +36,24 @@ static std::string l(const std::string &input,const int option=0){
 		}break;
 		case 1:{	//Ustawianie języka
 			#ifdef LANG_PL
-				if(input=="polski") lang=input;
+				if(input=="pl") lang=input;
 			#endif
 			#ifdef LANG_EN
-				if(input=="angielski") lang=input;
+				if(input=="en") lang=input;
 			#endif
 			#ifdef LANG_ES
-				if(input=="hiszpanski") lang=input;
+				if(input=="es") lang=input;
 			#endif
 		}break;
 		case 2:{	//Wypisywanie dostępnych języków
 			#ifdef LANG_PL
-				output.append("polski ");
+				output.append("pl ");
 			#endif
 			#ifdef LANG_EN
-				output.append("angielski ");
+				output.append("en ");
 			#endif
 			#ifdef LANG_ES
-				output.append("hiszpanski ");
+				output.append("es ");
 			#endif
 		}break;
 	}
