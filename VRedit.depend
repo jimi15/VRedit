@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1424897603 source:/home/jakub/jimi15/Programowanie/ncurses/VRedit/vredit.cpp
+1424987934 source:/home/jakub/jimi15/Programowanie/ncurses/VRedit/vredit.cpp
 	<ncursesw/ncurses.h>
 	<boost/algorithm/string.hpp>
 	<boost/locale.hpp>
@@ -15,19 +15,28 @@
 	"lang/es.hpp"
 	"lang.hpp"
 	"utf8.hpp"
+	"envParams.hpp"
+	"simpleWin.hpp"
+	"winHandler.hpp"
 	"vredit.hpp"
 
-1424808173 /home/jakub/jimi15/Programowanie/ncurses/VRedit/lang/pl.hpp
+1424984735 /home/jakub/jimi15/Programowanie/ncurses/VRedit/lang/pl.hpp
 
-1424808269 /home/jakub/jimi15/Programowanie/ncurses/VRedit/lang/en.hpp
+1424984809 /home/jakub/jimi15/Programowanie/ncurses/VRedit/lang/en.hpp
 
-1424808252 /home/jakub/jimi15/Programowanie/ncurses/VRedit/lang/es.hpp
+1424984855 /home/jakub/jimi15/Programowanie/ncurses/VRedit/lang/es.hpp
 
-1424361547 /home/jakub/jimi15/Programowanie/ncurses/VRedit/lang.hpp
+1424979311 /home/jakub/jimi15/Programowanie/ncurses/VRedit/lang.hpp
 
 1424722798 /home/jakub/jimi15/Programowanie/ncurses/VRedit/utf8.hpp
 
-1424901647 /home/jakub/jimi15/Programowanie/ncurses/VRedit/vredit.hpp
+1424985065 /home/jakub/jimi15/Programowanie/ncurses/VRedit/vredit.hpp
 
-1424808467 /home/jakub/jimi15/Programowanie/ncurses/VRedit/version.hpp
+1424988428 /home/jakub/jimi15/Programowanie/ncurses/VRedit/version.hpp
+
+1424987628 /home/jakub/jimi15/Programowanie/ncurses/VRedit/simpleWin.hpp
+
+1424988004 /home/jakub/jimi15/Programowanie/ncurses/VRedit/winHandler.hpp
+
+1424987942 /home/jakub/jimi15/Programowanie/ncurses/VRedit/envParams.hpp
 

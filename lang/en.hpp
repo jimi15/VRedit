@@ -22,6 +22,9 @@ public:
 			x["tak"] = "y";
 			x["nie"] = "n";
 			x["nie_mozna_pisac_do_pliku"] = "Can't write to file";
+			x["ctrl_plus_spacja_"] = "Ctrl+Space - close menu";
+			x["czy_chcesz_zapisac"] = "Do you want to save changes?";
+
 		}
 	}
 	std::string get(std::string const &key) { return x[key]; }

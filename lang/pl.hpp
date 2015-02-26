@@ -22,6 +22,8 @@ public:
 			x["tak"] = "t";
 			x["nie"] = "n";
 			x["nie_mozna_pisac_do_pliku"] = "Nie można pisać do pliku";
+			x["ctrl_plus_spacja_"] = "Ctrl+Spacja - zamknij menu";
+			x["czy_chcesz_zapisac"] = "Czy chcesz zapisać zmiany?";
 		}
 	}
 	std::string get(std::string const &key) { return x[key]; }

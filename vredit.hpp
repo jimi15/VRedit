@@ -1,5 +1,5 @@
-#ifndef VREDIT
-#define VREDIT
+#ifndef VREDIT_HPP
+#define VREDIT_HPP
 
 class vredit{
 		private:
@@ -50,6 +50,8 @@ class vredit{
 		keypad(stdscr,true);
 		this->flowm();
 
+		debug=true;
+
 		menu=false;
 		editor=true;
 		doclear=false;
@@ -92,10 +94,13 @@ class vredit{
 		getch();
 		if(flowmafter) flowm();
 	}
+	void putstring(const int y, const int x, const std::string s){
+		mvaddstr(y,x,s.c_str());
+		mvaddstr(y,x+wx/2,s.c_str());
+	}
 	void menubold(std::string tekst, short &it,short &yshift){
 		if(pozycja==it) attron(A_BOLD|A_UNDERLINE);
-		mvprintw(wy/2+yshift,marginlr+ex/2-tekst.size()/2,tekst.c_str());
-		mvprintw(wy/2+yshift,marginlr*3+ex+ex/2-tekst.size()/2,tekst.c_str());
+		putstring(wy/2+yshift,marginlr+ex/2-tekst.size()/2,tekst);
 		if(pozycja==it) attroff(A_BOLD|A_UNDERLINE);
 		it++;
 		yshift++;
@@ -223,8 +228,9 @@ class vredit{
 			clear();
 			if(nazwa.empty()){
 				forceoverwrite=false;
-				mvaddstr(wy/2,1,l("sciezka_do_pliku").c_str());
+				mvaddstr(wy/4,marginlr,l("sciezka_do_pliku").c_str());
 				addstr(": ");
+				move(wy/4+2,marginlr);
 				char bb[CHARBUF];
 				getch();
 				textm();
@@ -324,7 +330,7 @@ class vredit{
 		znak=utf8_code(z1,z2,z3,z4);
 	}
 	void debugZnak(){
-		if(znak!=-1) {mvprintw(0,0,"%3u",znak); mvaddnwstr(0,10,&znak,1);} else mvprintw(0,0,"            ");
+		if(debug && znak!=-1) {mvprintw(0,0,"%3u",znak); mvaddnwstr(0,10,&znak,1);} else mvprintw(0,0,"            ");
 	}
 
 	void handleEditor(){
@@ -338,13 +344,16 @@ class vredit{
 			if(py<vscroll) vscroll--;
 			if(!zmodyfikowano && bufor.size()>0) zmodyfikowano=true;
 
-			mvprintw(0,wx-50,"%3u %3u %3u %3u %3u %3u %3u %3u %3d %3d",wx,wy,ex,ey,lines,vscroll,lscroll,pos,px,py);
-			mvprintw(1,wx-50,"%3s %3s %3s %3s %3c %3c %3c %3c %3c %3c","wx","wy","ex","ey",'L','v','l','p','x','y');
+			if(debug){
+				mvprintw(0,wx-50,"%3u %3u %3u %3u %3u %3u %3u %3u %3d %3d",wx,wy,ex,ey,lines,vscroll,lscroll,pos,px,py);
+				mvprintw(1,wx-50,"%3s %3s %3s %3s %3c %3c %3c %3c %3c %3c","wx","wy","ex","ey",'L','v','l','p','x','y');
+			}
+
 			mvaddch(py-vscroll+margintop,px-lscroll+marginlr+tabindent,mvinch(py-vscroll+margintop,px-lscroll+marginlr) | A_REVERSE);
 			mvaddch(py-vscroll+margintop,px-lscroll+marginlr+wx/2+tabindent,mvinch(py-vscroll+margintop,px-lscroll+marginlr+wx/2) | A_REVERSE);
 
-			tabsinline=y=0;
-			charsinline=charsabove=charsunder=-1;
+			tabsinline=y=charsabove=0;
+			charsinline=charsunder=-1;
 			for(size_t i=0; i<bufor.size(); i++){
 				if(bufor[i]=='\n'){
 					if(y+1==py) charsabove=charsinline+1;
@@ -589,7 +598,8 @@ class vredit{
 			znakClear();
 
 			mvprintw(0,0,"v%s%s",AutoVersion::FULLVERSION_STRING,AutoVersion::STATUS_SHORT);
-			mvprintw(wy-1,0,l("ctrl_plus_spacja_").c_str());
+			putstring(wy-1,marginlr,l("ctrl_plus_spacja_"));
+
 			short it=0,ss=-3;
 			menubold(l("utworz"),it,ss);
 			menubold(l("zapisz"),it,ss);

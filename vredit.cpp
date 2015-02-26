@@ -1,22 +1,5 @@
 //Autor: jimikuba@o2.pl  Licencja: Public Domain
-/* TODO LIST:
-	-save file
-	-open file
-	-user defined tab indent
-	-security backup if writable
-	-safe-mode [read only]
-	-safe-binary [read only]
-	-autosave
-	-cut/copy/paste and text selecting
-	-BOM file handling
-	-history managment
-	-write assistant
-	-multitab support
-	-simple C++ syntax highligting
-*/
 	//ładowanie bibliotek
-
-#define _GLIBCXX_USE_WCHAR_T 1
 
 #include <ncursesw/ncurses.h>
 #include <boost/algorithm/string.hpp>
@@ -28,7 +11,6 @@
 #include <thread>
 #include <map>
 
-
 #include "version.hpp"
 #include "lang/pl.hpp"
 #include "lang/en.hpp"
@@ -38,6 +20,10 @@
 #include "utf8.hpp"
 
 #define CHARBUF 1024
+
+#include "envParams.hpp"
+#include "simpleWin.hpp"
+#include "winHandler.hpp"
 #include "vredit.hpp"
 
 int main(){
